@@ -17,3 +17,12 @@ summary(df$month)
 df$c <- NULL
 df$month <- factor(df$month,levels=c("August","September","October","November","December","January","February","March","June","July"))
 
+install.packages("ggplot2")
+library(ggplot2)
+
+
+a <- summary(df$month)
+a[]
+
+
+
