@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "0",
     "id" : "D4BB743E",
-    "lastKnownWriteTime" : 1596981021,
-    "last_content_update" : 1596981021571,
+    "lastKnownWriteTime" : 1596982864,
+    "last_content_update" : 1596982865132,
     "path" : "~/R/gambling_discovery/data_proccessing.R",
     "project_path" : "data_proccessing.R",
     "properties" : {
-        "cursorPosition" : "2,0",
-        "scrollLine" : "0",
+        "cursorPosition" : "18,0",
+        "scrollLine" : "2",
         "tempName" : "Untitled1"
     },
     "read_only" : false,
