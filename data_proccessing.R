@@ -197,4 +197,58 @@ matrix_of_accuracy_of_prediction <- data.frame(as.factor(true_predicted_rate[,1]
 names(matrix_of_accuracy_of_prediction)<-c("Team_name","Accuracy")
 matrix_of_accuracy_of_prediction
 
-ggplot(matrix_of_accuracy_of_prediction,aes(x=Team_name,y=Accuracy))+geom_point()
+ggplot(matrix_of_accuracy_of_prediction,aes(x=Team_name,y=Accuracy,colour=Accuracy>0.62))+
+  scale_colour_manual(name = 'Accuracy > 0.62', values = setNames(c('green','red'),c(T, F)))+
+  geom_point(size=4)
+
+table(df$month,df$true_predicted_goals)
+
+ggplot(df,aes(df$month,df$true_predicted_goals))+geom_bar()
+
+install.packages("reshape2")
+library(reshape2)
+summary(df)
+ncol(df)
+df_long <- reshape2::melt(df[,c(30,34)],id="month")
+df_long
+ggplot(df_long,aes(x=month,y=value,fill=variable,label=value))+
+  geom_bar(stat="identity")+
+  geom_text(size = 3, position = position_stack(vjust = 0.5))
+
+write.csv(df,"data/goal_pred_df.csv")
+
+summary(df)
+
+df$FTR <- as.factor(df$FTR)
+df$HTR <- as.factor(df$HTR)
+
+df$predicted_result <- NA
+ncol(df)
+for(i in 1:nrow(df)){
+  min_c <- min(df[i,c(25,26,27)])
+  ifelse(min_c==df[i,25],df[i,35]<-'H',
+         ifelse(min_c==df[i,26],df[i,35]<-'D',
+                df[i,35]<-'A'))
+}
+
+df$predicted_result <- as.factor(df$predicted_result)
+
+df[360,35]<-'D'
+
+summary(df$predicted_result)
+summary(df$FTR)
+
+df$predicted_result[is.na(df$predicted_result)]<-'D'
+df$predicted_result <- factor(df$predicted_result,levels = c("H","D","A"))
+
+df$true_predicted_result <- as.factor(ifelse(df$predicted_result==df$FTR,'Yes','No'))
+
+summary(df)
+
+df$final_at_half <- NA
+
+df$final_at_half <- as.factor(ifelse(df$HTR==df$FTR,'Yes','No'))
+
+summary(df)
+
+write.csv(df,"data/prediction_result.csv")
