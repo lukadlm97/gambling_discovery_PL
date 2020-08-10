@@ -60,6 +60,9 @@ df$away_predicted_rating <- factor(df$away_predicted_rating,levels = c("low","mi
 df$away_final_rating <- factor(df$away_final_rating,levels = c("low","mid","high","top"))
 
 summary(df)
+
+write.csv(df,"data/df_with_rating.csv")
+
 a <- table(df$true_predicted_result,df$true_predicted_goals,df$home_final_rating,df$away_final_rating)
 summary(a)
 
