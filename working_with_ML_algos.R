@@ -62,3 +62,25 @@ tree1.cm
 
 tree1.accuracy <- (sum(diag(tree1.cm))/sum(tree1.cm))*100
 tree1.accuracy
+
+
+install.packages("randomForest")
+install.packages("ROCR")
+library(ROCR)
+library(randomForest)
+
+model1 <- randomForest(more_2.5~.,data=train.df,ntree=500,mtry=6,importance=TRUE)
+
+model1
+
+rf1.pred <- predict(model1,test.df,type='class')
+rf1.pred
+
+rf1.cm <- table(predicted=rf1.pred,true=test.df$more_2.5)
+rf1.cm
+
+rf1.accuracy <- (sum(diag(rf1.cm))/sum(rf1.cm))*100
+rf1.accuracy
+
+
+#optimize parametars
