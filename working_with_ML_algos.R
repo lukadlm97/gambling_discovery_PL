@@ -13,8 +13,52 @@ install.packages("caret")
 install.packages("car")
 install.packages("e1071")
 library(caret)
+
 library(car)
 library(e1071)
-set.seed(190)
 
-train.indices <- createDataPartition(df_new$more_2.5,p=0.8)
+set.seed(190)
+train.indices <- createDataPartition(df_new$more_2.5,p=0.8,list=FALSE)
+
+train.df <- df_new[train.indices,]
+test.df <-df_new[-train.indices,]
+ncol(train.df)
+summary(train.df)
+summary(test.df)
+
+install.packages("rpart")
+library(rpart)
+t <- rpart(more_2.5~.,data = train.df)
+
+numFolds <- trainControl(method='cv',number=10)
+cpGrid = expand.grid(.cp=seq(0.001,0.05,0.0025))
+
+set.seed(10)
+dt.cv <- train(x=train.df[,-19],
+               y=train.df$more_2.5,
+               method='rpart',
+               control=rpart.control(minsplit=10),
+               trControl=numFolds,
+               tuneGrid=cpGrid)
+
+optimal_cp <- dt.cv$bestTune$cp
+optimal_cp
+
+tree1 <- rpart(more_2.5~.,data=train.df,method='class',
+               control=rpart.control(minsplit=10,cp=optimal_cp))
+
+tree1
+install.packages("rpart.plot")
+library(rpart.plot)
+
+rpart.plot(tree1)
+print(tree1)
+
+tree1.pred <- predict(tree1,newdata = test.df,type='class')
+tree1.pred
+
+tree1.cm <- table(true=test.df$more_2.5,predicted=tree1.pred)
+tree1.cm
+
+tree1.accuracy <- (sum(diag(tree1.cm))/sum(tree1.cm))*100
+tree1.accuracy
